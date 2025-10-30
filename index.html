@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSwan Cookie & Accessibility Website Compliance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWPjkbwP0aOOlTh7RFoUDsUU-YTEYW6nw",
+            authDomain: "the-webswan-compliance-audit.firebaseapp.com",
+            projectId: "the-webswan-compliance-audit",
+            storageBucket: "the-webswan-compliance-audit.firebasestorage.app",
+            messagingSenderId: "914302888289",
+            appId: "1:914302888289:web:fb57df335daa01701c3d20",
+            measurementId: "G-MD9M4GXPPV"
+        };
+
+        // Initialize Firebase
+        let app, analytics, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            analytics = getAnalytics(app);
+            db = getFirestore(app);
+            
+            // Make Firebase functions available globally
+            window.firebaseApp = app;
+            window.firebaseDb = db;
+            window.firebaseAddDoc = addDoc;
+            window.firebaseCollection = collection;
+            window.firebaseGetDocs = getDocs;
+            window.firebaseOnSnapshot = onSnapshot;
+            
+            console.log('🔥 Firebase initialized successfully');
+            
+            // Test Firebase connection immediately
+            testFirebaseConnection();
+        } catch (error) {
+            console.error('❌ Firebase initialization error:', error);
+            updateFirebaseStatus(false, 'Initialization Failed');
+        }
+
+        async function testFirebaseConnection() {
+            try {
+                // Test write operation
+                const testDoc = await addDoc(collection(db, "connection_tests"), {
+                    test: true,
+                    timestamp: new Date().toISOString(),
+                    message: "Firebase connection test successful"
+                });
+                console.log('✅ Firebase write test successful, document ID:', testDoc.id);
+                updateFirebaseStatus(true, 'Connected & Working');
+                
+                // Test read operation
+                const querySnapshot = await getDocs(collection(db, "connection_tests"));
+                console.log('✅ Firebase read test successful, documents:', querySnapshot.size);
+                
+            } catch (error) {
+                console.error('❌ Firebase connection test failed:', error);
+                updateFirebaseStatus(false, 'Connection Failed - Check Firebase Console');
+            }
+        }
+
+        function updateFirebaseStatus(connected, message) {
+            if (typeof window.updateFirebaseUI === 'function') {
+                window.updateFirebaseUI(connected, message);
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .header-gradient {
+            background: linear-gradient(135deg, #14395d 0%, #54c4cc 50%, #b9edea 100%);
+        }
+        .compliance-icon {
+            animation: float 3s ease-in-out infinite;
+        }
+        .law-icon {
+            animation: pulse 2s infinite;
+        }
+        .state-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .state-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .state-logo {
+            height: 60px;
+            width: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: white;
+            padding: 5px;
+        }
+        .compliance-btn {
+            background: linear-gradient(135deg, #14395d 0%, #54c4cc 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .compliance-btn:hover {
+            background: linear-gradient(135deg, #0f2a46 0%, #3da8b0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .footer {
+            background-color: #2F3746;
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 40px;
+        }
+        .form-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #54c4cc;
+            box-shadow: 0 0 0 3px rgba(84, 196, 204, 0.2);
+        }
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .word-count {
+            font-size: 0.875rem;
+            color: #6b7280;
+            text-align: right;
+            margin-top: 5px;
+        }
+        .key-access {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .key-access:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        .key-icon {
+            font-size: 24px;
+            color: #14395d;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .modal-button {
+            background: linear-gradient(135deg, #14395d 0%, #54c4cc 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .modal-button:hover {
+            background: linear-gradient(135deg, #0f2a46 0%, #3da8b0 100%);
+        }
+        .back-office {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 3000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .back-office-header {
+            background: linear-gradient(135deg, #14395d 0%, #54c4cc 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .leads-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .leads-table th, .leads-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .leads-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+        .leads-table tr:hover {
+            background: #f9fafb;
+        }
+        .close-back-office {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 20px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .privacy-notice {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border-left: 4px solid #54c4cc;
+        }
+        .audit-cta {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin: 25px 0;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            border: 2px solid #ffc107;
+        }
+        .audit-button {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .audit-button:hover {
+            background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .header-container {
+            position: relative;
+        }
+        .title-with-icons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .wheelchair-space {
+            margin-right: 8px;
+        }
+        .scales-space {
+            margin-left: 15px;
+        }
+        .loading-spinner {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #14395d;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .url-input-container {
+            position: relative;
+        }
+        .url-prefix {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+        }
+        .url-input {
+            padding-left: 110px !important;
+        }
+        .firebase-status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        .firebase-connected {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .firebase-disconnected {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .real-time-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen py-8 px-4">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="header-container header-gradient text-white rounded-2xl p-8 mb-10 text-center shadow-xl">
+                <div class="title-with-icons">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                        The WebSwan Cookie & Accessibility Website 
+                        <span class="compliance-icon wheelchair-space">♿</span> Compliance<span class="law-icon scales-space">⚖️</span>
+                    </h1>
+                </div>
+                <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
+                    Get a free website compliance analysis result today! Fill out the form and find out if your website meets state compliance
+                </p>
+                <div class="mt-6 flex flex-wrap justify-center gap-4">
+                    <div class="bg-white bg-opacity-20 rounded-lg px-4 py-2">
+                        <i class="fas fa-cookie-bite mr-2"></i> Cookie Compliance
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-lg px-4 py-2">
+                        <i class="fas fa-universal-access mr-2"></i> WCAG Accessibility
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-lg px-4 py-2">
+                        <i class="fas fa-shield-alt mr-2"></i> Data Privacy
+                    </div>
+                </div>
+            </div>
+
+            <!-- State Compliance Section -->
+            <div id="state-compliance" class="mb-10">
+                <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">State-Specific Compliance Requirements</h2>
+                <p class="text-gray-600 text-center mb-8 max-w-3xl mx-auto">
+                    If your state is not listed, search for "attorney general privacy policy and accessibility compliance for websites"
+                    <br><br>
+                    <strong class="text-lg text-red-600">Scroll down to view your state website compliance requirements</strong>
+                </p>
+
+                <div class="audit-cta">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Don't Risk Costly Fines!</h3>
+                    <p class="text-gray-700 mb-4">Get your FREE compliance audit today and ensure your website meets all legal requirements</p>
+                    <a href="#application" class="audit-button">
+                        <i class="fas fa-shield-alt mr-2"></i> Get FREE Compliance Audit
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- New York -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-blue-100 text-blue-800 font-bold">
+                                    NY
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">New York</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Consumer protection laws requiring website accessibility and privacy compliance.
+                            </p>
+                            <a href="https://www.google.com/search?q=new+york+consumer+protection+law+on+website+compliance" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-balance-scale"></i> Attorney General Compliance
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Florida -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-orange-100 text-orange-800 font-bold">
+                                    FL
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">Florida</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Digital Bill of Rights governing data privacy and website accessibility requirements.
+                            </p>
+                            <a href="https://www.google.com/search?q=fipa+florida+digital+bill+of+rights" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-gavel"></i> Digital Bill of Rights
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Texas -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-red-100 text-red-800 font-bold">
+                                    TX
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">Texas</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Data Privacy and Security Act regulating cookie usage and accessibility standards.
+                            </p>
+                            <a href="https://www.google.com/search?q=texas+data+privacy+and+security+act" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-lock"></i> Data Privacy & Security Act
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- California -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-yellow-100 text-yellow-800 font-bold">
+                                    CA
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">California</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                California Consumer Privacy Act (CCPA) with strict cookie and accessibility requirements.
+                            </p>
+                            <a href="https://www.google.com/search?q=california+consumer+privacy+act+cookie+and+accessibility+fine" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-user-shield"></i> CCPA Compliance
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Georgia -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-red-100 text-red-800 font-bold">
+                                    GA
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">Georgia</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                WCAG accessibility compliance requirements for all state and business websites.
+                            </p>
+                            <a href="https://www.google.com/search?q=georgia+privacy+law+and+accessibility+for+website+compliance" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-universal-access"></i> WCAG Compliance
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Virginia -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-blue-100 text-blue-800 font-bold">
+                                    VA
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">Virginia</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Attorney General regulations on website privacy policies and accessibility standards.
+                            </p>
+                            <a href="https://www.google.com/search?q=virginia+state+attorney+general+regulation+on+website+privacy+and+accessibility" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-balance-scale"></i> Attorney General Regulations
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- North Carolina -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-blue-100 text-blue-800 font-bold">
+                                    NC
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">North Carolina</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                State laws governing website accessibility and privacy requirements for businesses.
+                            </p>
+                            <a href="https://www.google.com/search?q=north+carolina+accessibility+and+privacy+website+law" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-landmark"></i> State Law Compliance
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- South Carolina -->
+                    <div class="state-card bg-white">
+                        <div class="p-5">
+                            <div class="flex items-center mb-4">
+                                <div class="state-logo mr-3 flex items-center justify-center bg-blue-100 text-blue-800 font-bold">
+                                    SC
+                                </div>
+                                <h3 class="text-xl font-bold text-gray-800">South Carolina</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">
+                                Attorney General website compliance requirements with potential penalty amounts.
+                            </p>
+                            <a href="https://www.google.com/search?q=south+carolina+attorney+general+website+compliance+penalty+amount" 
+                               target="_blank" class="compliance-btn">
+                                <i class="fas fa-gavel"></i> Attorney General Compliance
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- More States Placeholder -->
+                    <div class="state-card bg-gradient-to-br from-blue-50 to-indigo-100 border-2 border-dashed border-blue-300">
+                        <div class="p-5 text-center h-full flex flex-col justify-center">
+                            <i class="fas fa-plus-circle text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">More States Coming Soon</h3>
+                            <p class="text-gray-600">
+                                We're continuously adding more state compliance information
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Analysis Form -->
+            <div id="application" class="form-container p-8 mb-10">
+                <h2 class="text-3xl font-bold text-center mb-2 text-gray-800">Free Website Compliance Analysis</h2>
+                <p class="text-gray-600 text-center mb-8">
+                    Fill out the form below to get a comprehensive analysis of your website's compliance status
+                </p>
+                
+                <form id="complianceForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="companyName" class="block text-gray-700 font-medium mb-2">Company Name *</label>
+                            <input type="text" id="companyName" name="companyName" class="form-input" required>
+                        </div>
+                        <div class="url-input-container">
+                            <label for="websiteUrl" class="block text-gray-700 font-medium mb-2">Website URL *</label>
+                            <div class="relative">
+                                <span class="url-prefix">https://www.</span>
+                                <input type="text" id="websiteUrl" name="websiteUrl" class="form-input url-input" placeholder="yourwebsite.com" required>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-1">Just enter your domain name (e.g., yourwebsite.com)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="phoneNumber" class="block text-gray-700 font-medium mb-2">Phone Number *</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" class="form-input" placeholder="(555) 555-5555" required>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="comments" class="block text-gray-700 font-medium mb-2">Questions or Additional Comments</label>
+                        <textarea id="comments" name="comments" class="form-input form-textarea" placeholder="Tell us about any specific compliance concerns or questions you have (max 200 words)"></textarea>
+                        <div class="word-count">
+                            <span id="wordCount">0</span>/200 words
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="compliance-btn w-full py-3 text-lg mb-6" id="submitButton">
+                        <i class="fas fa-chart-bar mr-2"></i> Get Free Compliance Analysis
+                    </button>
+                    <div class="loading-spinner" id="formLoading"></div>
+                    
+                    <!-- Privacy Notice -->
+                    <div class="privacy-notice">
+                        <p class="text-sm text-gray-600">
+                            <i class="fas fa-shield-alt mr-2 text-blue-500"></i>
+                            We are only collecting your information for the purpose of the free compliance audit. We do not share or sell your information to third parties. 
+                            <a href="https://thewebswan.com/privacy-policy" class="text-blue-600 hover:underline">View our privacy policy</a>.
+                        </p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Introduction -->
+            <div class="bg-white rounded-2xl p-6 mb-10 shadow-lg">
+                <h2 class="text-2xl font-bold mb-4 text-gray-800">Why Compliance Matters</h2>
+                <p class="text-gray-600 mb-4">
+                    Website compliance is no longer optional. With increasing regulations across states, businesses must ensure 
+                    their websites meet legal requirements for accessibility, privacy, and data protection. Non-compliance can 
+                    result in significant fines, legal action, and damage to your brand reputation.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
+                        <h3 class="font-bold text-blue-800 mb-2">Legal Protection</h3>
+                        <p class="text-blue-700 text-sm">Avoid costly lawsuits and regulatory penalties</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+                        <h3 class="font-bold text-green-800 mb-2">Inclusive Experience</h3>
+                        <p class="text-green-700 text-sm">Ensure your website is accessible to all users</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-500">
+                        <h3 class="font-bold text-purple-800 mb-2">Customer Trust</h3>
+                        <p class="text-purple-700 text-sm">Build confidence with transparent data practices</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white text-center mb-10 shadow-xl">
+                <h2 class="text-3xl font-bold mb-4">Need Help With Compliance?</h2>
+                <p class="text-xl mb-6 max-w-2xl mx-auto">
+                    WebSwan can help ensure your website meets all state and federal compliance requirements
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="#application" class="bg-white text-blue-600 font-bold py-3 px-6 rounded-lg hover:bg-blue-50 transition duration-300 flex items-center">
+                        <i class="fas fa-cog mr-2"></i> Click here to get compliance audit
+                    </a>
+                    <a href="tel:4158770687" class="bg-transparent border-2 border-white text-white font-bold py-3 px-6 rounded-lg hover:bg-white hover:bg-opacity-10 transition duration-300 flex items-center">
+                        <i class="fas fa-phone-alt mr-2"></i> Contact Our Experts (415) 877-0687
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <div class="mb-4 md:mb-0">
+                            <h3 class="text-xl font-bold">WebSwan Compliance Solutions</h3>
+                            <p class="text-gray-300">Making the web accessible and compliant for everyone</p>
+                        </div>
+                        <div class="flex space-x-4">
+                            <a href="https://www.linkedin.com/in/tania-domingue-882a68282/" class="text-white hover:text-blue-300 transition duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://www.facebook.com/profile.php?id=61564322427695" class="text-white hover:text-blue-400 transition duration-300">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://www.instagram.com/motivationalll_speaker/" class="text-white hover:text-pink-500 transition duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-600 pt-6 text-center text-gray-300">
+                        <p>&copy; 2023 WebSwan Compliance. All rights reserved.</p>
+                        <p class="mt-2">This information is for educational purposes and does not constitute legal advice.</p>
+                        <p class="mt-2">If you have been fined for non-compliance, contact an attorney to assist you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Access Button -->
+    <div class="key-access" id="keyAccess">
+        <div class="key-icon">🔑</div>
+    </div>
+
+    <!-- Password Modal -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4 text-center text-gray-800">Back Office Access</h2>
+            <p class="text-gray-600 mb-6 text-center">Enter password to access the back office</p>
+            <input type="password" id="passwordInput" class="modal-input" placeholder="Password" autofocus>
+            <button id="submitPassword" class="modal-button">Access Back Office</button>
+            <p id="passwordError" class="text-red-500 text-center mt-4 hidden">Incorrect password. Please try again.</p>
+        </div>
+    </div>
+
+    <!-- Back Office -->
+    <div class="back-office" id="backOffice">
+        <button class="close-back-office" id="closeBackOffice">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <div class="back-office-header">
+            <h1 class="text-3xl font-bold">WebSwan Compliance Back Office <span class="real-time-badge">LIVE DATA</span></h1>
+            <p class="text-white opacity-90">Manage compliance analysis requests and leads - Real-time Firebase Database</p>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-6 shadow-lg mb-6">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Compliance Analysis Requests</h2>
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                    <button id="loadFirebaseData" class="compliance-btn mr-2">
+                        <i class="fas fa-database mr-2"></i> Load from Firebase
+                    </button>
+                    <button id="loadLocalData" class="compliance-btn mr-2" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                        <i class="fas fa-laptop mr-2"></i> Load from Local Storage
+                    </button>
+                    <button id="startRealtime" class="compliance-btn" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);">
+                        <i class="fas fa-bolt mr-2"></i> Real-time Updates
+                    </button>
+                    <span id="firebaseStatus" class="firebase-status firebase-disconnected">Firebase: Testing Connection...</span>
+                </div>
+                <div class="text-sm text-gray-600" id="dataSourceInfo"></div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="leads-table">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Website URL</th>
+                            <th>Phone Number</th>
+                            <th>Comments</th>
+                            <th>Date Submitted</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadsTableBody">
+                        <!-- Leads will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="noLeadsMessage" class="text-center py-8 text-gray-500">
+                <i class="fas fa-inbox text-4xl mb-4"></i>
+                <p>No compliance analysis requests yet.</p>
+            </div>
+            <div class="loading-spinner" id="tableLoading"></div>
+        </div>
+        
+        <div class="bg-white rounded-2xl p-6 shadow-lg">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Back Office Actions</h2>
+            <div class="flex flex-wrap gap-4">
+                <button id="exportLeads" class="compliance-btn">
+                    <i class="fas fa-download mr-2"></i> Export Leads to Google Sheet
+                </button>
+                <button id="refreshData" class="compliance-btn" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+                    <i class="fas fa-sync-alt mr-2"></i> Refresh Data
+                </button>
+                <button id="clearData" class="compliance-btn" style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);">
+                    <i class="fas fa-trash-alt mr-2"></i> Clear Local Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase UI update function
+        window.updateFirebaseUI = function(connected, message) {
+            const firebaseStatus = document.getElementById('firebaseStatus');
+            if (connected) {
+                firebaseStatus.textContent = 'Firebase: ' + message;
+                firebaseStatus.className = 'firebase-status firebase-connected';
+            } else {
+                firebaseStatus.textContent = 'Firebase: ' + message;
+                firebaseStatus.className = 'firebase-status firebase-disconnected';
+            }
+        };
+
+        // Word count for comments
+        document.getElementById('comments').addEventListener('input', function() {
+            updateWordCount(this, 'wordCount');
+        });
+
+        function updateWordCount(textarea, countElementId) {
+            const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
+            const wordCount = words.length;
+            document.getElementById(countElementId).textContent = wordCount;
+            
+            if (wordCount > 200) {
+                textarea.value = words.slice(0, 200).join(' ');
+                document.getElementById(countElementId).textContent = 200;
+                document.getElementById(countElementId).style.color = '#EF4444';
+            } else {
+                document.getElementById(countElementId).style.color = '#6b7280';
+            }
+        }
+
+        // Form submission with better error handling
+        document.getElementById('complianceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitButton = document.getElementById('submitButton');
+            const loadingSpinner = document.getElementById('formLoading');
+            
+            // Show loading state
+            submitButton.disabled = true;
+            loadingSpinner.style.display = 'block';
+            
+            // Get form data
+            const websiteUrlInput = document.getElementById('websiteUrl').value;
+            // Prepend https://www. to the URL if not already included
+            let fullWebsiteUrl = websiteUrlInput;
+            if (!websiteUrlInput.startsWith('http')) {
+                fullWebsiteUrl = 'https://www.' + websiteUrlInput.replace(/^(https?:\/\/)?(www\.)?/, '');
+            }
+            
+            const formData = {
+                companyName: document.getElementById('companyName').value,
+                websiteUrl: fullWebsiteUrl,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                comments: document.getElementById('comments').value,
+                dateSubmitted: new Date().toLocaleString(),
+                status: 'New',
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                // Save to localStorage (for immediate display)
+                saveLead(formData);
+                
+                // Save to Firebase (for permanent storage)
+                const firebaseResult = await saveLeadToFirebase(formData);
+                
+                // Show success message
+                alert('✅ Thank you! Your compliance analysis request has been submitted. We will contact you soon.');
+                
+                // Reset form
+                this.reset();
+                document.getElementById('wordCount').textContent = '0';
+                
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('⚠️ There was an issue submitting your request. Your data has been saved locally and we will process it manually. Thank you!');
+            } finally {
+                // Reset loading state
+                submitButton.disabled = false;
+                loadingSpinner.style.display = 'none';
+            }
+        });
+
+        function saveLead(leadData) {
+            let leads = JSON.parse(localStorage.getItem('complianceLeads')) || [];
+            leads.push(leadData);
+            localStorage.setItem('complianceLeads', JSON.stringify(leads));
+            console.log('💾 Lead saved to localStorage:', leadData);
+        }
+
+        async function saveLeadToFirebase(leadData) {
+            if (!window.firebaseDb || !window.firebaseAddDoc || !window.firebaseCollection) {
+                console.error('❌ Firebase not properly initialized');
+                throw new Error('Firebase not available');
+            }
+            
+            try {
+                const docRef = await window.firebaseAddDoc(
+                    window.firebaseCollection(window.firebaseDb, "complianceLeads"), 
+                    leadData
+                );
+                console.log("🔥 Document written to Firebase with ID: ", docRef.id);
+                window.updateFirebaseUI(true, 'Connected & Working');
+                return docRef;
+            } catch (e) {
+                console.error("❌ Error adding document to Firebase: ", e);
+                window.updateFirebaseUI(false, 'Save Failed');
+                throw e;
+            }
+        }
+
+        // Back office access system
+        let keyClickCount = 0;
+        const keyAccess = document.getElementById('keyAccess');
+        const passwordModal = document.getElementById('passwordModal');
+        const backOffice = document.getElementById('backOffice');
+        const passwordInput = document.getElementById('passwordInput');
+        const submitPassword = document.getElementById('submitPassword');
+        const passwordError = document.getElementById('passwordError');
+        const closeBackOffice = document.getElementById('closeBackOffice');
+        const leadsTableBody = document.getElementById('leadsTableBody');
+        const noLeadsMessage = document.getElementById('noLeadsMessage');
+        const exportLeads = document.getElementById('exportLeads');
+        const refreshData = document.getElementById('refreshData');
+        const clearData = document.getElementById('clearData');
+        const loadFirebaseData = document.getElementById('loadFirebaseData');
+        const loadLocalData = document.getElementById('loadLocalData');
+        const startRealtime = document.getElementById('startRealtime');
+        const dataSourceInfo = document.getElementById('dataSourceInfo');
+        const tableLoading = document.getElementById('tableLoading');
+        const firebaseStatus = document.getElementById('firebaseStatus');
+
+        let realtimeUnsubscribe = null;
+
+        keyAccess.addEventListener('click', function() {
+            keyClickCount++;
+            
+            if (keyClickCount >= 7) {
+                passwordModal.style.display = 'flex';
+                // Focus on password field when modal opens
+                setTimeout(() => {
+                    passwordInput.focus();
+                }, 100);
+                keyClickCount = 0; // Reset counter
+            }
+        });
+
+        // Submit password with Enter key
+        passwordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                submitPassword.click();
+            }
+        });
+
+        submitPassword.addEventListener('click', function() {
+            if (passwordInput.value === '333') {
+                passwordModal.style.display = 'none';
+                backOffice.style.display = 'block';
+                loadLeadsFromLocal(); // Default to local storage
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+            } else {
+                passwordError.classList.remove('hidden');
+            }
+        });
+
+        closeBackOffice.addEventListener('click', function() {
+            backOffice.style.display = 'none';
+            passwordInput.value = '';
+            passwordError.classList.add('hidden');
+            
+            // Stop real-time updates when closing back office
+            if (realtimeUnsubscribe) {
+                realtimeUnsubscribe();
+                realtimeUnsubscribe = null;
+            }
+        });
+
+        // Load data from Firebase
+        loadFirebaseData.addEventListener('click', async function() {
+            await loadLeadsFromFirebase();
+        });
+
+        // Load data from Local Storage
+        loadLocalData.addEventListener('click', function() {
+            loadLeadsFromLocal();
+        });
+
+        // Start real-time updates
+        startRealtime.addEventListener('click', function() {
+            startRealTimeUpdates();
+        });
+
+        // Export leads to Google Sheet
+        exportLeads.addEventListener('click', function() {
+            window.open('https://docs.google.com/spreadsheets/d/1mXmwoF2qeJVoCsvK6GjsgV6xsc2x_RhGMs7vLAm1U4I/edit?gid=0#gid=0', '_blank');
+        });
+
+        // Refresh data
+        refreshData.addEventListener('click', function() {
+            loadLeadsFromLocal();
+            alert('Data refreshed from local storage!');
+        });
+
+        // Clear all data
+        clearData.addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all local storage data? This will not affect Firebase data.')) {
+                localStorage.removeItem('complianceLeads');
+                loadLeadsFromLocal();
+                alert('Local data has been cleared.');
+            }
+        });
+
+        async function loadLeadsFromFirebase() {
+            if (!window.firebaseDb || !window.firebaseGetDocs || !window.firebaseCollection) {
+                alert('❌ Firebase is not properly configured. Loading from local storage instead.');
+                loadLeadsFromLocal();
+                return;
+            }
+
+            tableLoading.style.display = 'block';
+            leadsTableBody.innerHTML = '';
+            noLeadsMessage.style.display = 'none';
+
+            try {
+                const querySnapshot = await window.firebaseGetDocs(
+                    window.firebaseCollection(window.firebaseDb, "complianceLeads")
+                );
+                
+                const leads = [];
+                querySnapshot.forEach((doc) => {
+                    leads.push({ id: doc.id, ...doc.data() });
+                });
+
+                displayLeads(leads, 'Firebase');
+                window.updateFirebaseUI(true, 'Connected & Working');
+            } catch (error) {
+                console.error('❌ Error loading from Firebase:', error);
+                alert('❌ Error loading data from Firebase. Loading from local storage instead.');
+                window.updateFirebaseUI(false, 'Load Failed');
+                loadLeadsFromLocal();
+            } finally {
+                tableLoading.style.display = 'none';
+            }
+        }
+
+        function loadLeadsFromLocal() {
+            const leads = JSON.parse(localStorage.getItem('complianceLeads')) || [];
+            displayLeads(leads, 'Local Storage');
+        }
+
+        function startRealTimeUpdates() {
+            if (!window.firebaseDb || !window.firebaseOnSnapshot || !window.firebaseCollection) {
+                alert('❌ Firebase real-time updates not available');
+                return;
+            }
+
+            // Stop any existing real-time listener
+            if (realtimeUnsubscribe) {
+                realtimeUnsubscribe();
+            }
+
+            tableLoading.style.display = 'block';
+            leadsTableBody.innerHTML = '';
+            noLeadsMessage.style.display = 'none';
+
+            try {
+                realtimeUnsubscribe = window.firebaseOnSnapshot(
+                    window.firebaseCollection(window.firebaseDb, "complianceLeads"),
+                    (querySnapshot) => {
+                        const leads = [];
+                        querySnapshot.forEach((doc) => {
+                            leads.push({ id: doc.id, ...doc.data() });
+                        });
+
+                        displayLeads(leads, 'Firebase Real-time');
+                        window.updateFirebaseUI(true, 'Connected & Real-time');
+                        tableLoading.style.display = 'none';
+                    },
+                    (error) => {
+                        console.error('❌ Real-time updates error:', error);
+                        window.updateFirebaseUI(false, 'Real-time Failed');
+                        tableLoading.style.display = 'none';
+                    }
+                );
+
+                alert('🔔 Real-time updates activated! The table will update automatically when new submissions come in.');
+            } catch (error) {
+                console.error('❌ Error starting real-time updates:', error);
+                window.updateFirebaseUI(false, 'Real-time Failed');
+                tableLoading.style.display = 'none';
+            }
+        }
+
+        function displayLeads(leads, source) {
+            dataSourceInfo.textContent = `Data loaded from: ${source} | Total leads: ${leads.length}`;
+            
+            if (leads.length === 0) {
+                noLeadsMessage.style.display = 'block';
+                leadsTableBody.innerHTML = '';
+                return;
+            }
+            
+            noLeadsMessage.style.display = 'none';
+            leadsTableBody.innerHTML = '';
+            
+            // Sort by timestamp (newest first)
+            leads.sort((a, b) => new Date(b.timestamp || b.dateSubmitted) - new Date(a.timestamp || a.dateSubmitted));
+            
+            leads.forEach(lead => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="font-medium">${lead.companyName}</td>
+                    <td><a href="${lead.websiteUrl}" target="_blank" class="text-blue-500 hover:underline">${lead.websiteUrl}</a></td>
+                    <td>${lead.phoneNumber}</td>
+                    <td class="max-w-xs truncate">${lead.comments || 'No comments'}</td>
+                    <td class="whitespace-nowrap">${lead.dateSubmitted}</td>
+                    <td><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">${lead.status}</span></td>
+                `;
+                leadsTableBody.appendChild(row);
+            });
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === passwordModal) {
+                passwordModal.style.display = 'none';
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+            }
+        });
+
+        // Test Firebase connection on load
+        window.addEventListener('load', function() {
+            console.log('🚀 WebSwan Compliance loaded successfully');
+            console.log('🔥 Testing Firebase connection...');
+        });
+    </script>
+</body>
+</html>
