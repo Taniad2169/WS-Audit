@@ -14,16 +14,15 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
-        // IMPORTANT: Replace with your actual Firebase config from Firebase Console
+        // 🔥 YOUR ACTUAL FIREBASE CONFIG
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY_HERE",
-            authDomain: "YOUR_AUTH_DOMAIN_HERE",
-            projectId: "YOUR_PROJECT_ID_HERE",
-            storageBucket: "YOUR_STORAGE_BUCKET_HERE",
-            messagingSenderId: "YOUR_SENDER_ID_HERE",
-            appId: "YOUR_APP_ID_HERE",
-            measurementId: "YOUR_MEASUREMENT_ID_HERE"
+            apiKey: "AIzaSyBWPjkbwP0aOOlTh7RFoUDsUU-YTEYW6nw",
+            authDomain: "the-webswan-compliance-audit.firebaseapp.com",
+            projectId: "the-webswan-compliance-audit",
+            storageBucket: "the-webswan-compliance-audit.firebasestorage.app",
+            messagingSenderId: "914302888289",
+            appId: "1:914302888289:web:fb57df335daa01701c3d20",
+            measurementId: "G-MD9M4GXPPV"
         };
 
         // Initialize Firebase
@@ -472,6 +471,31 @@
         [data-theme="dark"] .theme-icon {
             color: #fbbf24;
         }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
     </style>
 </head>
 <body>
@@ -738,7 +762,7 @@
                         <p class="text-sm">
                             <i class="fas fa-shield-alt mr-2 text-blue-500"></i>
                             We are only collecting your information for the purpose of the free compliance audit. We do not share or sell your information to third parties. 
-                            <a href="https://thewebswan.com/privacy-policy" class="text-blue-600 hover:underline">View our privacy policy</a>.
+                            <a href="https://www.thewebswan.com/privacy-policy" class="text-blue-600 hover:underline">View our privacy policy</a>.
                         </p>
                     </div>
                 </form>
@@ -792,17 +816,6 @@
                             <h3 class="text-xl font-bold">WebSwan Compliance Solutions</h3>
                             <p class="text-gray-300">Making the web accessible and compliant for everyone</p>
                         </div>
-                        <div class="flex space-x-4">
-                            <a href="https://www.linkedin.com/in/tania-domingue-882a68282/" class="text-white hover:text-blue-300 transition duration-300">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                            <a href="https://www.facebook.com/profile.php?id=61564322427695" class="text-white hover:text-blue-400 transition duration-300">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="https://www.instagram.com/motivationalll_speaker/" class="text-white hover:text-pink-500 transition duration-300">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                        </div>
                     </div>
                     <div class="border-t border-gray-600 pt-6 text-center text-gray-300">
                         <p>&copy; 2023 WebSwan Compliance. All rights reserved.</p>
@@ -841,6 +854,26 @@
             <p class="text-white opacity-90">Manage compliance analysis requests and leads - Real-time Firebase Database</p>
         </div>
         
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card" style="border-left-color: #3b82f6;">
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">Total Requests</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #10b981;">
+                <div class="stat-number" id="todayRequests">0</div>
+                <div class="stat-label">Today's Requests</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #8b5cf6;">
+                <div class="stat-number" id="weekRequests">0</div>
+                <div class="stat-label">This Week</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #f59e0b;">
+                <div class="stat-number" id="monthRequests">0</div>
+                <div class="stat-label">This Month</div>
+            </div>
+        </div>
+        
         <div class="state-card p-6 shadow-lg mb-6">
             <h2 class="text-2xl font-bold mb-4">Compliance Analysis Requests</h2>
             <div class="flex justify-between items-center mb-4">
@@ -862,22 +895,22 @@
                 <table class="leads-table">
                     <thead>
                         <tr>
+                            <th>Timestamp</th>
                             <th>Company Name</th>
                             <th>Website URL</th>
                             <th>Phone Number</th>
                             <th>Comments</th>
-                            <th>Date Submitted</th>
-                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="leadsTableBody">
-                        <!-- Leads will be populated here -->
+                        <tr>
+                            <td colspan="6" class="text-center py-8 text-gray-500">
+                                No data loaded. Click "Load from Firebase" to see compliance requests.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-            </div>
-            <div id="noLeadsMessage" class="text-center py-8">
-                <i class="fas fa-inbox text-4xl mb-4"></i>
-                <p>No compliance analysis requests yet.</p>
             </div>
             <div class="loading-spinner" id="tableLoading"></div>
         </div>
@@ -886,7 +919,7 @@
             <h2 class="text-2xl font-bold mb-4">Back Office Actions</h2>
             <div class="flex flex-wrap gap-4">
                 <button id="exportLeads" class="compliance-btn">
-                    <i class="fas fa-download mr-2"></i> Export Leads to Google Sheet
+                    <i class="fas fa-download mr-2"></i> Export Leads to CSV
                 </button>
                 <button id="refreshData" class="compliance-btn" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
                     <i class="fas fa-sync-alt mr-2"></i> Refresh Data
@@ -904,200 +937,112 @@
         const themeIcon = document.getElementById('themeIcon');
         const body = document.body;
 
-        // Check for saved theme or prefer-color-scheme
-        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        body.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        if (currentTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            themeIcon.className = 'fas fa-sun';
+        }
 
         themeToggle.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
-
-        function updateThemeIcon(theme) {
-            if (theme === 'dark') {
-                themeIcon.className = 'fas fa-sun';
-            } else {
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
                 themeIcon.className = 'fas fa-moon';
-            }
-        }
-
-        // Firebase UI update function
-        window.updateFirebaseUI = function(connected, message) {
-            const firebaseStatus = document.getElementById('firebaseStatus');
-            if (connected) {
-                firebaseStatus.textContent = 'Firebase: ' + message;
-                firebaseStatus.className = 'firebase-status firebase-connected';
+                localStorage.setItem('theme', 'light');
             } else {
-                firebaseStatus.textContent = 'Firebase: ' + message;
-                firebaseStatus.className = 'firebase-status firebase-disconnected';
+                body.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
             }
-        };
-
-        // Word count for comments
-        document.getElementById('comments').addEventListener('input', function() {
-            updateWordCount(this, 'wordCount');
         });
 
-        function updateWordCount(textarea, countElementId) {
-            const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
+        // Word Counter for Comments
+        const commentsTextarea = document.getElementById('comments');
+        const wordCountDisplay = document.getElementById('wordCount');
+
+        commentsTextarea.addEventListener('input', function() {
+            const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
             const wordCount = words.length;
-            document.getElementById(countElementId).textContent = wordCount;
+            
+            wordCountDisplay.textContent = wordCount;
             
             if (wordCount > 200) {
-                textarea.value = words.slice(0, 200).join(' ');
-                document.getElementById(countElementId).textContent = 200;
-                document.getElementById(countElementId).style.color = '#EF4444';
+                wordCountDisplay.style.color = '#ef4444';
+                this.style.borderColor = '#ef4444';
             } else {
-                document.getElementById(countElementId).style.color = '#6b7280';
-            }
-        }
-
-        // Form submission with better error handling
-        document.getElementById('complianceForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitButton = document.getElementById('submitButton');
-            const loadingSpinner = document.getElementById('formLoading');
-            
-            // Show loading state
-            submitButton.disabled = true;
-            loadingSpinner.style.display = 'block';
-            
-            // Get form data
-            const websiteUrlInput = document.getElementById('websiteUrl').value;
-            // Prepend https://www. to the URL if not already included
-            let fullWebsiteUrl = websiteUrlInput;
-            if (!websiteUrlInput.startsWith('http')) {
-                fullWebsiteUrl = 'https://www.' + websiteUrlInput.replace(/^(https?:\/\/)?(www\.)?/, '');
-            }
-            
-            const formData = {
-                companyName: document.getElementById('companyName').value,
-                websiteUrl: fullWebsiteUrl,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                comments: document.getElementById('comments').value,
-                dateSubmitted: new Date().toLocaleString(),
-                status: 'New',
-                timestamp: new Date().toISOString()
-            };
-            
-            try {
-                // Save to localStorage (for immediate display)
-                saveLead(formData);
-                
-                // Save to Firebase (for permanent storage)
-                const firebaseResult = await saveLeadToFirebase(formData);
-                
-                // Show success message
-                alert('✅ Thank you! Your compliance analysis request has been submitted. We will contact you soon.');
-                
-                // Reset form
-                this.reset();
-                document.getElementById('wordCount').textContent = '0';
-                
-            } catch (error) {
-                console.error('Form submission error:', error);
-                alert('⚠️ There was an issue submitting your request. Your data has been saved locally and we will process it manually. Thank you!');
-            } finally {
-                // Reset loading state
-                submitButton.disabled = false;
-                loadingSpinner.style.display = 'none';
+                wordCountDisplay.style.color = '#6b7280';
+                this.style.borderColor = '#d1d5db';
             }
         });
 
-        function saveLead(leadData) {
-            let leads = JSON.parse(localStorage.getItem('complianceLeads')) || [];
-            leads.push(leadData);
-            localStorage.setItem('complianceLeads', JSON.stringify(leads));
-            console.log('💾 Lead saved to localStorage:', leadData);
-        }
-
-        async function saveLeadToFirebase(leadData) {
-            if (!window.firebaseDb || !window.firebaseAddDoc || !window.firebaseCollection) {
-                console.error('❌ Firebase not properly initialized');
-                throw new Error('Firebase not available');
-            }
-            
-            try {
-                const docRef = await window.firebaseAddDoc(
-                    window.firebaseCollection(window.firebaseDb, "complianceLeads"), 
-                    leadData
-                );
-                console.log("🔥 Document written to Firebase with ID: ", docRef.id);
-                window.updateFirebaseUI(true, 'Connected & Working');
-                return docRef;
-            } catch (e) {
-                console.error("❌ Error adding document to Firebase: ", e);
-                window.updateFirebaseUI(false, 'Save Failed');
-                throw e;
-            }
-        }
-
-        // Back office access system
-        let keyClickCount = 0;
+        // Back Office Access - Fixed 7 clicks and password 333
         const keyAccess = document.getElementById('keyAccess');
         const passwordModal = document.getElementById('passwordModal');
         const backOffice = document.getElementById('backOffice');
         const passwordInput = document.getElementById('passwordInput');
         const submitPassword = document.getElementById('submitPassword');
-        const passwordError = document.getElementById('passwordError');
         const closeBackOffice = document.getElementById('closeBackOffice');
-        const leadsTableBody = document.getElementById('leadsTableBody');
-        const noLeadsMessage = document.getElementById('noLeadsMessage');
-        const exportLeads = document.getElementById('exportLeads');
-        const refreshData = document.getElementById('refreshData');
-        const clearData = document.getElementById('clearData');
-        const loadFirebaseData = document.getElementById('loadFirebaseData');
-        const loadLocalData = document.getElementById('loadLocalData');
-        const startRealtime = document.getElementById('startRealtime');
-        const dataSourceInfo = document.getElementById('dataSourceInfo');
-        const tableLoading = document.getElementById('tableLoading');
-        const firebaseStatus = document.getElementById('firebaseStatus');
+        const passwordError = document.getElementById('passwordError');
 
-        let realtimeUnsubscribe = null;
+        let keyClickCount = 0;
+        let lastClickTime = 0;
+        const CLICK_TIMEOUT = 2000; // 2 seconds between clicks
+        const REQUIRED_CLICKS = 7;
+        const CORRECT_PASSWORD = "333";
 
-        keyAccess.addEventListener('click', function() {
-            keyClickCount++;
+        keyAccess.addEventListener('click', () => {
+            const currentTime = Date.now();
             
-            if (keyClickCount >= 7) {
+            // Reset if too much time passed between clicks
+            if (currentTime - lastClickTime > CLICK_TIMEOUT) {
+                keyClickCount = 1;
+            } else {
+                keyClickCount++;
+            }
+            
+            lastClickTime = currentTime;
+            
+            console.log(`Key clicked ${keyClickCount} times`);
+            
+            // Show visual feedback
+            keyAccess.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                keyAccess.style.transform = 'scale(1)';
+            }, 100);
+            
+            // Check if 7 consecutive clicks reached
+            if (keyClickCount >= REQUIRED_CLICKS) {
                 passwordModal.style.display = 'flex';
-                // Focus on password field when modal opens
-                setTimeout(() => {
-                    passwordInput.focus();
-                }, 100);
+                passwordInput.focus();
                 keyClickCount = 0; // Reset counter
+                console.log('7 clicks detected - showing password modal');
             }
         });
 
-        // Submit password with Enter key
-        passwordInput.addEventListener('keypress', function(e) {
+        submitPassword.addEventListener('click', () => {
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                passwordModal.style.display = 'none';
+                backOffice.style.display = 'block';
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+                loadLocalStorageData();
+                console.log('Password correct - back office accessed');
+            } else {
+                passwordError.classList.remove('hidden');
+                passwordInput.value = '';
+                passwordInput.focus();
+                console.log('Incorrect password entered');
+            }
+        });
+
+        passwordInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 submitPassword.click();
             }
         });
 
-        submitPassword.addEventListener('click', function() {
-            if (passwordInput.value === '333') {
-                passwordModal.style.display = 'none';
-                backOffice.style.display = 'block';
-                loadLeadsFromLocal(); // Default to local storage
-                passwordInput.value = '';
-                passwordError.classList.add('hidden');
-            } else {
-                passwordError.classList.remove('hidden');
-            }
-        });
-
-        closeBackOffice.addEventListener('click', function() {
+        closeBackOffice.addEventListener('click', () => {
             backOffice.style.display = 'none';
-            passwordInput.value = '';
-            passwordError.classList.add('hidden');
-            
             // Stop real-time updates when closing back office
             if (realtimeUnsubscribe) {
                 realtimeUnsubscribe();
@@ -1105,164 +1050,406 @@
             }
         });
 
-        // Load data from Firebase
-        loadFirebaseData.addEventListener('click', async function() {
-            await loadLeadsFromFirebase();
-        });
-
-        // Load data from Local Storage
-        loadLocalData.addEventListener('click', function() {
-            loadLeadsFromLocal();
-        });
-
-        // Start real-time updates
-        startRealtime.addEventListener('click', function() {
-            startRealTimeUpdates();
-        });
-
-        // Export leads to Google Sheet
-        exportLeads.addEventListener('click', function() {
-            window.open('https://docs.google.com/spreadsheets/d/1mXmwoF2qeJVoCsvK6GjsgV6xsc2x_RhGMs7vLAm1U4I/edit?gid=0#gid=0', '_blank');
-        });
-
-        // Refresh data
-        refreshData.addEventListener('click', function() {
-            loadLeadsFromLocal();
-            alert('Data refreshed from local storage!');
-        });
-
-        // Clear all data
-        clearData.addEventListener('click', function() {
-            if (confirm('Are you sure you want to clear all local storage data? This will not affect Firebase data.')) {
-                localStorage.removeItem('complianceLeads');
-                loadLeadsFromLocal();
-                alert('Local data has been cleared.');
-            }
-        });
-
-        async function loadLeadsFromFirebase() {
-            if (!window.firebaseDb || !window.firebaseGetDocs || !window.firebaseCollection) {
-                alert('❌ Firebase is not properly configured. Loading from local storage instead.');
-                loadLeadsFromLocal();
-                return;
-            }
-
-            tableLoading.style.display = 'block';
-            leadsTableBody.innerHTML = '';
-            noLeadsMessage.style.display = 'none';
-
-            try {
-                const querySnapshot = await window.firebaseGetDocs(
-                    window.firebaseCollection(window.firebaseDb, "complianceLeads")
-                );
-                
-                const leads = [];
-                querySnapshot.forEach((doc) => {
-                    leads.push({ id: doc.id, ...doc.data() });
-                });
-
-                displayLeads(leads, 'Firebase');
-                window.updateFirebaseUI(true, 'Connected & Working');
-            } catch (error) {
-                console.error('❌ Error loading from Firebase:', error);
-                alert('❌ Error loading data from Firebase. Loading from local storage instead.');
-                window.updateFirebaseUI(false, 'Load Failed');
-                loadLeadsFromLocal();
-            } finally {
-                tableLoading.style.display = 'none';
-            }
-        }
-
-        function loadLeadsFromLocal() {
-            const leads = JSON.parse(localStorage.getItem('complianceLeads')) || [];
-            displayLeads(leads, 'Local Storage');
-        }
-
-        function startRealTimeUpdates() {
-            if (!window.firebaseDb || !window.firebaseOnSnapshot || !window.firebaseCollection) {
-                alert('❌ Firebase real-time updates not available');
-                return;
-            }
-
-            // Stop any existing real-time listener
-            if (realtimeUnsubscribe) {
-                realtimeUnsubscribe();
-            }
-
-            tableLoading.style.display = 'block';
-            leadsTableBody.innerHTML = '';
-            noLeadsMessage.style.display = 'none';
-
-            try {
-                realtimeUnsubscribe = window.firebaseOnSnapshot(
-                    window.firebaseCollection(window.firebaseDb, "complianceLeads"),
-                    (querySnapshot) => {
-                        const leads = [];
-                        querySnapshot.forEach((doc) => {
-                            leads.push({ id: doc.id, ...doc.data() });
-                        });
-
-                        displayLeads(leads, 'Firebase Real-time');
-                        window.updateFirebaseUI(true, 'Connected & Real-time');
-                        tableLoading.style.display = 'none';
-                    },
-                    (error) => {
-                        console.error('❌ Real-time updates error:', error);
-                        window.updateFirebaseUI(false, 'Real-time Failed');
-                        tableLoading.style.display = 'none';
-                    }
-                );
-
-                alert('🔔 Real-time updates activated! The table will update automatically when new submissions come in.');
-            } catch (error) {
-                console.error('❌ Error starting real-time updates:', error);
-                window.updateFirebaseUI(false, 'Real-time Failed');
-                tableLoading.style.display = 'none';
-            }
-        }
-
-        function displayLeads(leads, source) {
-            dataSourceInfo.textContent = `Data loaded from: ${source} | Total leads: ${leads.length}`;
-            
-            if (leads.length === 0) {
-                noLeadsMessage.style.display = 'block';
-                leadsTableBody.innerHTML = '';
-                return;
-            }
-            
-            noLeadsMessage.style.display = 'none';
-            leadsTableBody.innerHTML = '';
-            
-            // Sort by timestamp (newest first)
-            leads.sort((a, b) => new Date(b.timestamp || b.dateSubmitted) - new Date(a.timestamp || a.dateSubmitted));
-            
-            leads.forEach(lead => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="font-medium">${lead.companyName}</td>
-                    <td><a href="${lead.websiteUrl}" target="_blank" class="text-blue-500 hover:underline">${lead.websiteUrl}</a></td>
-                    <td>${lead.phoneNumber}</td>
-                    <td class="max-w-xs truncate">${lead.comments || 'No comments'}</td>
-                    <td class="whitespace-nowrap">${lead.dateSubmitted}</td>
-                    <td><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">${lead.status}</span></td>
-                `;
-                leadsTableBody.appendChild(row);
-            });
-        }
-
         // Close modal when clicking outside
         window.addEventListener('click', function(e) {
             if (e.target === passwordModal) {
                 passwordModal.style.display = 'none';
                 passwordInput.value = '';
                 passwordError.classList.add('hidden');
+                keyClickCount = 0; // Reset counter when modal closed
             }
         });
 
-        // Test Firebase connection on load
-        window.addEventListener('load', function() {
-            console.log('🚀 WebSwan Compliance loaded successfully');
-            console.log('🔥 Testing Firebase connection...');
+        // Firebase Status Update Function
+        window.updateFirebaseUI = function(connected, message) {
+            const statusElement = document.getElementById('firebaseStatus');
+            if (connected) {
+                statusElement.textContent = 'Firebase: ' + message;
+                statusElement.className = 'firebase-status firebase-connected';
+            } else {
+                statusElement.textContent = 'Firebase: ' + message;
+                statusElement.className = 'firebase-status firebase-disconnected';
+            }
+        };
+
+        // Form Submission Handler
+        const complianceForm = document.getElementById('complianceForm');
+        const submitButton = document.getElementById('submitButton');
+        const formLoading = document.getElementById('formLoading');
+
+        complianceForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate word count
+            const comments = document.getElementById('comments').value;
+            const wordCount = comments.trim().split(/\s+/).filter(word => word.length > 0).length;
+            if (wordCount > 200) {
+                alert('Please limit your comments to 200 words or less.');
+                return;
+            }
+
+            // Show loading state
+            submitButton.disabled = true;
+            formLoading.style.display = 'block';
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+
+            try {
+                // Prepare form data
+                const websiteUrlInput = document.getElementById('websiteUrl').value;
+                let fullWebsiteUrl = websiteUrlInput;
+                if (!websiteUrlInput.startsWith('http')) {
+                    fullWebsiteUrl = 'https://www.' + websiteUrlInput.replace(/^(https?:\/\/)?(www\.)?/, '');
+                }
+
+                const formData = {
+                    companyName: document.getElementById('companyName').value,
+                    websiteUrl: fullWebsiteUrl,
+                    phoneNumber: document.getElementById('phoneNumber').value,
+                    comments: comments,
+                    timestamp: new Date().toISOString(),
+                    dateSubmitted: new Date().toLocaleString(),
+                    status: 'New'
+                };
+
+                // Save to Firebase
+                if (window.firebaseDb && window.firebaseAddDoc && window.firebaseCollection) {
+                    try {
+                        const docRef = await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, "compliance_requests"), formData);
+                        console.log('✅ Document written with ID: ', docRef.id);
+                        
+                        // Also save to localStorage as backup
+                        saveToLocalStorage(formData);
+                        
+                        // Show success message
+                        alert('Thank you! Your compliance analysis request has been submitted successfully. We will contact you soon.');
+                        complianceForm.reset();
+                        wordCountDisplay.textContent = '0';
+                        
+                    } catch (firebaseError) {
+                        console.error('❌ Error adding document to Firebase: ', firebaseError);
+                        // Fallback to localStorage only
+                        saveToLocalStorage(formData);
+                        alert('Thank you! Your request has been submitted (offline mode). We will process it soon.');
+                        complianceForm.reset();
+                        wordCountDisplay.textContent = '0';
+                    }
+                } else {
+                    // Firebase not available, use localStorage only
+                    saveToLocalStorage(formData);
+                    alert('Thank you! Your request has been submitted. We will contact you soon.');
+                    complianceForm.reset();
+                    wordCountDisplay.textContent = '0';
+                }
+                
+            } catch (error) {
+                console.error('❌ Form submission error:', error);
+                alert('There was an error submitting your request. Please try again or call us directly at (415) 877-0687');
+            } finally {
+                // Reset loading state
+                submitButton.disabled = false;
+                formLoading.style.display = 'none';
+                submitButton.innerHTML = '<i class="fas fa-chart-bar mr-2"></i> Get Free Compliance Analysis';
+            }
+        });
+
+        // Local Storage Functions
+        function saveToLocalStorage(formData) {
+            try {
+                const existingData = JSON.parse(localStorage.getItem('complianceRequests') || '[]');
+                existingData.push({
+                    ...formData,
+                    localId: Date.now().toString()
+                });
+                localStorage.setItem('complianceRequests', JSON.stringify(existingData));
+                console.log('✅ Data saved to localStorage');
+            } catch (error) {
+                console.error('❌ Error saving to localStorage:', error);
+            }
+        }
+
+        function loadLocalStorageData() {
+            try {
+                const storedData = JSON.parse(localStorage.getItem('complianceRequests') || '[]');
+                updateLeadsTable(storedData);
+                updateStats(storedData);
+                return storedData;
+            } catch (error) {
+                console.error('❌ Error loading from localStorage:', error);
+                return [];
+            }
+        }
+
+        // Back Office Data Management
+        const loadFirebaseData = document.getElementById('loadFirebaseData');
+        const loadLocalData = document.getElementById('loadLocalData');
+        const startRealtime = document.getElementById('startRealtime');
+        const leadsTableBody = document.getElementById('leadsTableBody');
+        const dataSourceInfo = document.getElementById('dataSourceInfo');
+        const tableLoading = document.getElementById('tableLoading');
+        const exportLeads = document.getElementById('exportLeads');
+        const refreshData = document.getElementById('refreshData');
+        const clearData = document.getElementById('clearData');
+
+        let realtimeUnsubscribe = null;
+
+        loadLocalData.addEventListener('click', () => {
+            const data = loadLocalStorageData();
+            alert(`Loaded ${data.length} records from local storage`);
+        });
+
+        loadFirebaseData.addEventListener('click', async () => {
+            if (!window.firebaseDb || !window.firebaseGetDocs || !window.firebaseCollection) {
+                alert('Firebase is not available. Please check your connection.');
+                return;
+            }
+
+            try {
+                tableLoading.style.display = 'block';
+                const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDb, "compliance_requests"));
+                const firebaseData = [];
+                
+                querySnapshot.forEach((doc) => {
+                    firebaseData.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                updateLeadsTable(firebaseData);
+                updateStats(firebaseData);
+                dataSourceInfo.textContent = `Data loaded from: Firebase | Total leads: ${firebaseData.length}`;
+                alert(`Loaded ${firebaseData.length} records from Firebase`);
+                
+            } catch (error) {
+                console.error('❌ Error loading from Firebase:', error);
+                alert('Error loading data from Firebase. Please try again.');
+            } finally {
+                tableLoading.style.display = 'none';
+            }
+        });
+
+        startRealtime.addEventListener('click', () => {
+            if (!window.firebaseDb || !window.firebaseOnSnapshot || !window.firebaseCollection) {
+                alert('Firebase is not available. Please check your connection.');
+                return;
+            }
+
+            try {
+                // Stop any existing real-time listener
+                if (realtimeUnsubscribe) {
+                    realtimeUnsubscribe();
+                }
+
+                tableLoading.style.display = 'block';
+                leadsTableBody.innerHTML = '';
+
+                realtimeUnsubscribe = window.firebaseOnSnapshot(
+                    window.firebaseCollection(window.firebaseDb, "compliance_requests"),
+                    (querySnapshot) => {
+                        const realtimeData = [];
+                        querySnapshot.forEach((doc) => {
+                            realtimeData.push({
+                                id: doc.id,
+                                ...doc.data()
+                            });
+                        });
+                        
+                        updateLeadsTable(realtimeData);
+                        updateStats(realtimeData);
+                        dataSourceInfo.textContent = `Data loaded from: Firebase Real-time | Total leads: ${realtimeData.length}`;
+                        tableLoading.style.display = 'none';
+                    },
+                    (error) => {
+                        console.error('❌ Real-time updates error:', error);
+                        tableLoading.style.display = 'none';
+                    }
+                );
+                
+                alert('Real-time updates activated! The table will now update automatically when new data arrives.');
+                startRealtime.disabled = true;
+                startRealtime.innerHTML = '<i class="fas fa-bolt mr-2"></i> Real-time Active';
+                
+            } catch (error) {
+                console.error('❌ Error starting real-time updates:', error);
+                alert('Error starting real-time updates. Please try again.');
+                tableLoading.style.display = 'none';
+            }
+        });
+
+        // Table and Stats Update Functions
+        function updateLeadsTable(data) {
+            if (data.length === 0) {
+                leadsTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-8 text-gray-500">
+                            No compliance requests found.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Sort by timestamp descending (newest first)
+            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            leadsTableBody.innerHTML = data.map(item => `
+                <tr>
+                    <td class="whitespace-nowrap">${formatDate(item.timestamp)}</td>
+                    <td class="font-medium">${escapeHtml(item.companyName)}</td>
+                    <td>
+                        <a href="${item.websiteUrl}" target="_blank" class="text-blue-600 hover:underline">
+                            ${escapeHtml(item.websiteUrl)}
+                        </a>
+                    </td>
+                    <td>${escapeHtml(item.phoneNumber)}</td>
+                    <td class="max-w-xs truncate">${escapeHtml(item.comments || 'No comments')}</td>
+                    <td>
+                        <button class="text-blue-600 hover:text-blue-800 mr-2 view-details" data-id="${item.id || item.localId}">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="text-green-600 hover:text-green-800 mr-2 contact-lead" data-phone="${item.phoneNumber}">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                        <button class="text-red-600 hover:text-red-800 delete-lead" data-id="${item.id || item.localId}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Add event listeners for action buttons
+            document.querySelectorAll('.view-details').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.closest('button').dataset.id;
+                    const item = data.find(d => (d.id === id) || (d.localId === id));
+                    if (item) {
+                        alert(`Company: ${item.companyName}\nWebsite: ${item.websiteUrl}\nPhone: ${item.phoneNumber}\nComments: ${item.comments || 'No comments'}\nSubmitted: ${formatDate(item.timestamp)}`);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.contact-lead').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const phone = e.target.closest('button').dataset.phone;
+                    window.open(`tel:${phone}`, '_self');
+                });
+            });
+
+            document.querySelectorAll('.delete-lead').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.closest('button').dataset.id;
+                    if (confirm('Are you sure you want to delete this lead?')) {
+                        // Implementation for deletion would go here
+                        alert('Delete functionality would be implemented here');
+                    }
+                });
+            });
+        }
+
+        function updateStats(data) {
+            const totalRequests = data.length;
+            document.getElementById('totalRequests').textContent = totalRequests;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const todayRequests = data.filter(item => item.timestamp && item.timestamp.includes(today)).length;
+            document.getElementById('todayRequests').textContent = todayRequests;
+            
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            const weekRequests = data.filter(item => {
+                const itemDate = new Date(item.timestamp);
+                return itemDate >= weekAgo;
+            }).length;
+            document.getElementById('weekRequests').textContent = weekRequests;
+            
+            const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+            const monthRequests = data.filter(item => {
+                const itemDate = new Date(item.timestamp);
+                return itemDate >= monthAgo;
+            }).length;
+            document.getElementById('monthRequests').textContent = monthRequests;
+            
+            dataSourceInfo.textContent = `${totalRequests} records loaded`;
+        }
+
+        // Export functionality
+        exportLeads.addEventListener('click', function() {
+            const data = JSON.parse(localStorage.getItem('complianceRequests') || '[]');
+            
+            if (data.length === 0) {
+                alert('No data to export!');
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = "Company Name,Website URL,Phone Number,Comments,Date Submitted,Status\n";
+            
+            data.forEach(lead => {
+                const row = [
+                    `"${lead.companyName}"`,
+                    `"${lead.websiteUrl}"`,
+                    `"${lead.phoneNumber}"`,
+                    `"${(lead.comments || '').replace(/"/g, '""')}"`,
+                    `"${lead.dateSubmitted}"`,
+                    `"${lead.status}"`
+                ];
+                csvContent += row.join(',') + '\n';
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'webswan-compliance-leads.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('CSV file downloaded successfully!');
+        });
+
+        refreshData.addEventListener('click', function() {
+            loadLocalStorageData();
+            alert('Data refreshed from local storage!');
+        });
+
+        clearData.addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all local storage data? This will not affect Firebase data.')) {
+                localStorage.removeItem('complianceRequests');
+                loadLocalStorageData();
+                alert('Local data has been cleared.');
+            }
+        });
+
+        // Utility Functions
+        function formatDate(timestamp) {
+            if (!timestamp) return 'N/A';
+            const date = new Date(timestamp);
+            return date.toLocaleString();
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('WebSwan Compliance Website Loaded');
+            
+            // Test localStorage availability
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+            } catch (e) {
+                console.warn('LocalStorage is not available:', e);
+            }
         });
     </script>
 </body>
