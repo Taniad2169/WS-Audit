@@ -7,105 +7,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        // 🔥 YOUR ACTUAL FIREBASE CONFIG
-        const firebaseConfig = {
-            apiKey: "AIzaSyBWPjkbwP0aOOlTh7RFoUDsUU-YTEYW6nw",
-            authDomain: "the-webswan-compliance-audit.firebaseapp.com",
-            projectId: "the-webswan-compliance-audit",
-            storageBucket: "the-webswan-compliance-audit.firebasestorage.app",
-            messagingSenderId: "914302888289",
-            appId: "1:914302888289:web:fb57df335daa01701c3d20",
-            measurementId: "G-MD9M4GXPPV"
-        };
-
-        // Initialize Firebase
-        let app, analytics, db;
-        try {
-            app = initializeApp(firebaseConfig);
-            analytics = getAnalytics(app);
-            db = getFirestore(app);
-            
-            // Make Firebase functions available globally
-            window.firebaseApp = app;
-            window.firebaseDb = db;
-            window.firebaseAddDoc = addDoc;
-            window.firebaseCollection = collection;
-            window.firebaseGetDocs = getDocs;
-            window.firebaseOnSnapshot = onSnapshot;
-            
-            console.log('🔥 Firebase initialized successfully');
-            
-            // Test Firebase connection immediately
-            testFirebaseConnection();
-        } catch (error) {
-            console.error('❌ Firebase initialization error:', error);
-            updateFirebaseStatus(false, 'Initialization Failed');
-        }
-
-        async function testFirebaseConnection() {
-            try {
-                // Test write operation
-                const testDoc = await addDoc(collection(db, "connection_tests"), {
-                    test: true,
-                    timestamp: new Date().toISOString(),
-                    message: "Firebase connection test successful"
-                });
-                console.log('✅ Firebase write test successful, document ID:', testDoc.id);
-                updateFirebaseStatus(true, 'Connected & Working');
-                
-                // Test read operation
-                const querySnapshot = await getDocs(collection(db, "connection_tests"));
-                console.log('✅ Firebase read test successful, documents:', querySnapshot.size);
-                
-            } catch (error) {
-                console.error('❌ Firebase connection test failed:', error);
-                updateFirebaseStatus(false, 'Connection Failed - Check Firebase Console');
-            }
-        }
-
-        function updateFirebaseStatus(connected, message) {
-            if (typeof window.updateFirebaseUI === 'function') {
-                window.updateFirebaseUI(connected, message);
-            }
-        }
-    </script>
-    
     <style>
-        :root {
-            --bg-primary: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --text-primary: #1f2937;
-            --card-bg: white;
-            --form-bg: white;
-            --header-gradient: linear-gradient(135deg, #14395d 0%, #54c4cc 50%, #b9edea 100%);
+        /* Container isolation for SiteSwan embedding */
+        body {
+            position: relative !important;
+            overflow-x: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #1f2937;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .container-wrapper {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 auto !important;
+            padding: 20px !important;
         }
 
         [data-theme="dark"] {
-            --bg-primary: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            --text-primary: #f3f4f6;
-            --card-bg: #374151;
-            --form-bg: #4b5563;
-            --header-gradient: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: #f3f4f6;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            transition: all 0.3s ease;
+        [data-theme="dark"] .state-card,
+        [data-theme="dark"] .form-container {
+            background: #374151;
         }
+
         .header-gradient {
-            background: var(--header-gradient);
+            background: linear-gradient(135deg, #14395d 0%, #54c4cc 50%, #b9edea 100%);
         }
+
+        [data-theme="dark"] .header-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%);
+        }
+
         .compliance-icon {
             animation: float 3s ease-in-out infinite;
         }
@@ -117,7 +64,8 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            background: var(--card-bg);
+            background: white;
+            width: 100% !important;
         }
         .state-card:hover {
             transform: translateY(-5px);
@@ -128,7 +76,7 @@
             width: 60px;
             object-fit: contain;
             border-radius: 8px;
-            background: var(--card-bg);
+            background: white;
             padding: 5px;
         }
         .compliance-btn {
@@ -143,6 +91,7 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            text-decoration: none;
         }
         .compliance-btn:hover {
             background: linear-gradient(135deg, #0f2a46 0%, #3da8b0 100%);
@@ -165,12 +114,20 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
             margin-top: 40px;
+            width: 100% !important;
         }
         .form-container {
-            background: var(--form-bg);
+            background: white;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            width: 100% !important;
+        }
+        [data-theme="dark"] .form-input,
+        [data-theme="dark"] .modal-input {
+            background: #4b5563;
+            color: #f3f4f6;
+            border-color: #6b7280;
         }
         .form-input {
             width: 100%;
@@ -179,8 +136,8 @@
             border-radius: 8px;
             font-size: 16px;
             transition: all 0.3s;
-            background: var(--form-bg);
-            color: var(--text-primary);
+            background: white;
+            color: #1f2937;
         }
         .form-input:focus {
             outline: none;
@@ -197,31 +154,61 @@
             text-align: right;
             margin-top: 5px;
         }
+        
+        /* Contained fixed elements for embedding */
         .key-access {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            position: absolute !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            background: #14395d !important;
+            color: white !important;
             border-radius: 50%;
             width: 60px;
             height: 60px;
-            display: flex;
+            display: flex !important;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s;
-            z-index: 1000;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 100;
+            border: 2px solid white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-size: 24px;
         }
         .key-access:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: #0f2a46 !important;
             transform: scale(1.1);
         }
-        .key-icon {
-            font-size: 24px;
+
+        .theme-toggle {
+            position: absolute !important;
+            top: 20px !important;
+            right: 20px !important;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+            border: 2px solid #14395d;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .theme-toggle:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+        .theme-icon {
+            font-size: 20px;
             color: #14395d;
         }
+        [data-theme="dark"] .theme-icon {
+            color: #fbbf24;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -230,18 +217,22 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
+            z-index: 1000;
             align-items: center;
             justify-content: center;
         }
         .modal-content {
-            background: var(--form-bg);
-            color: var(--text-primary);
+            background: white;
+            color: #1f2937;
             border-radius: 16px;
             padding: 30px;
             width: 90%;
             max-width: 400px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        [data-theme="dark"] .modal-content {
+            background: #374151;
+            color: #f3f4f6;
         }
         .modal-input {
             width: 100%;
@@ -250,8 +241,8 @@
             border-radius: 8px;
             margin-bottom: 15px;
             font-size: 16px;
-            background: var(--form-bg);
-            color: var(--text-primary);
+            background: white;
+            color: #1f2937;
         }
         .modal-button {
             background: linear-gradient(135deg, #14395d 0%, #54c4cc 100%);
@@ -274,11 +265,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--form-bg);
-            color: var(--text-primary);
-            z-index: 3000;
+            background: white;
+            color: #1f2937;
+            z-index: 1000;
             overflow-y: auto;
             padding: 20px;
+        }
+        [data-theme="dark"] .back-office {
+            background: #1f2937;
+            color: #f3f4f6;
         }
         .back-office-header {
             background: linear-gradient(135deg, #14395d 0%, #54c4cc 100%);
@@ -290,24 +285,38 @@
         .leads-table {
             width: 100%;
             border-collapse: collapse;
-            background: var(--form-bg);
+            background: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        [data-theme="dark"] .leads-table {
+            background: #374151;
         }
         .leads-table th, .leads-table td {
             padding: 12px 15px;
             text-align: left;
             border-bottom: 1px solid #e5e7eb;
-            color: var(--text-primary);
+        }
+        [data-theme="dark"] .leads-table th,
+        [data-theme="dark"] .leads-table td {
+            border-color: #4b5563;
+            color: #f3f4f6;
         }
         .leads-table th {
             background: #f9fafb;
             font-weight: 600;
             color: #374151;
         }
+        [data-theme="dark"] .leads-table th {
+            background: #4b5563;
+            color: #f3f4f6;
+        }
         .leads-table tr:hover {
             background: #f9fafb;
+        }
+        [data-theme="dark"] .leads-table tr:hover {
+            background: #4b5563;
         }
         .close-back-office {
             position: absolute;
@@ -335,6 +344,9 @@
             margin-top: 20px;
             border-left: 4px solid #54c4cc;
         }
+        [data-theme="dark"] .privacy-notice {
+            background: #374151;
+        }
         .audit-cta {
             background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
             border-radius: 12px;
@@ -343,6 +355,7 @@
             margin: 25px 0;
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
             border: 2px solid #ffc107;
+            width: 100% !important;
         }
         .audit-button {
             background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
@@ -359,26 +372,12 @@
             cursor: pointer;
             margin-top: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
         }
         .audit-button:hover {
             background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        .header-container {
-            position: relative;
-        }
-        .title-with-icons {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .wheelchair-space {
-            margin-right: 8px;
-        }
-        .scales-space {
-            margin-left: 15px;
         }
         .loading-spinner {
             display: none;
@@ -442,36 +441,6 @@
             font-weight: bold !important;
         }
 
-        /* Theme Toggle Styles */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            z-index: 1000;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-        .theme-icon {
-            font-size: 20px;
-            color: #14395d;
-        }
-        [data-theme="dark"] .theme-icon {
-            color: #fbbf24;
-        }
-
         /* Stats Cards */
         .stats-grid {
             display: grid;
@@ -480,12 +449,15 @@
             margin: 1.5rem 0;
         }
         .stat-card {
-            background: var(--card-bg);
+            background: white;
             padding: 1.5rem;
             border-radius: 12px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-left: 4px solid;
+        }
+        [data-theme="dark"] .stat-card {
+            background: #374151;
         }
         .stat-number {
             font-size: 2rem;
@@ -496,26 +468,33 @@
             font-size: 0.875rem;
             color: #6b7280;
         }
+
+        /* Grid fixes for embedding */
+        .grid {
+            width: 100% !important;
+        }
+        .max-w-6xl {
+            max-width: 100% !important;
+            width: 100% !important;
+        }
     </style>
 </head>
 <body>
-    <!-- Theme Toggle Button -->
-    <div class="theme-toggle" id="themeToggle">
-        <div class="theme-icon">
-            <i class="fas fa-moon" id="themeIcon"></i>
+    <div class="container-wrapper">
+        <!-- Theme Toggle Button -->
+        <div class="theme-toggle" id="themeToggle">
+            <div class="theme-icon">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </div>
         </div>
-    </div>
 
-    <div class="min-h-screen py-8 px-4">
-        <div class="max-w-6xl mx-auto">
+        <div class="min-h-screen py-8">
             <!-- Header -->
             <div class="header-container header-gradient text-white rounded-2xl p-8 mb-10 text-center shadow-xl">
-                <div class="title-with-icons">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                        The WebSwan Cookie & Accessibility Website 
-                        <span class="compliance-icon wheelchair-space">♿</span> Compliance<span class="law-icon scales-space">⚖️</span>
-                    </h1>
-                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    The WebSwan Cookie & Accessibility Website 
+                    <span class="compliance-icon">♿</span> Compliance<span class="law-icon">⚖️</span>
+                </h1>
                 <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
                     Get a free website compliance analysis result today! Fill out the form and find out if your website meets state compliance
                 </p>
@@ -931,7 +910,90 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // 🔥 YOUR ACTUAL FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWPjkbwP0aOOlTh7RFoUDsUU-YTEYW6nw",
+            authDomain: "the-webswan-compliance-audit.firebaseapp.com",
+            projectId: "the-webswan-compliance-audit",
+            storageBucket: "the-webswan-compliance-audit.firebasestorage.app",
+            messagingSenderId: "914302888289",
+            appId: "1:914302888289:web:fb57df335daa01701c3d20",
+            measurementId: "G-MD9M4GXPPV"
+        };
+
+        // Initialize Firebase
+        let app, analytics, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            analytics = getAnalytics(app);
+            db = getFirestore(app);
+            
+            // Make Firebase functions available globally
+            window.firebaseApp = app;
+            window.firebaseDb = db;
+            window.firebaseAddDoc = addDoc;
+            window.firebaseCollection = collection;
+            window.firebaseGetDocs = getDocs;
+            window.firebaseOnSnapshot = onSnapshot;
+            
+            console.log('🔥 Firebase initialized successfully');
+            
+            // Test Firebase connection immediately
+            testFirebaseConnection();
+        } catch (error) {
+            console.error('❌ Firebase initialization error:', error);
+            updateFirebaseStatus(false, 'Initialization Failed');
+        }
+
+        async function testFirebaseConnection() {
+            try {
+                // Test write operation
+                const testDoc = await addDoc(collection(db, "connection_tests"), {
+                    test: true,
+                    timestamp: new Date().toISOString(),
+                    message: "Firebase connection test successful"
+                });
+                console.log('✅ Firebase write test successful, document ID:', testDoc.id);
+                updateFirebaseStatus(true, 'Connected & Working');
+                
+                // Test read operation
+                const querySnapshot = await getDocs(collection(db, "connection_tests"));
+                console.log('✅ Firebase read test successful, documents:', querySnapshot.size);
+                
+            } catch (error) {
+                console.error('❌ Firebase connection test failed:', error);
+                updateFirebaseStatus(false, 'Connection Failed - Check Firebase Console');
+            }
+        }
+
+        function updateFirebaseStatus(connected, message) {
+            const statusElement = document.getElementById('firebaseStatus');
+            if (statusElement) {
+                if (connected) {
+                    statusElement.textContent = 'Firebase: ' + message;
+                    statusElement.className = 'firebase-status firebase-connected';
+                } else {
+                    statusElement.textContent = 'Firebase: ' + message;
+                    statusElement.className = 'firebase-status firebase-disconnected';
+                }
+            }
+        }
+
+        // Make updateFirebaseStatus available globally for Firebase script
+        window.updateFirebaseUI = updateFirebaseStatus;
+    </script>
+
     <script>
+        // Global variables
+        let realtimeUnsubscribe = null;
+
         // Theme Toggle Functionality
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
@@ -944,36 +1006,40 @@
             themeIcon.className = 'fas fa-sun';
         }
 
-        themeToggle.addEventListener('click', () => {
-            if (body.getAttribute('data-theme') === 'dark') {
-                body.removeAttribute('data-theme');
-                themeIcon.className = 'fas fa-moon';
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                themeIcon.className = 'fas fa-sun';
-                localStorage.setItem('theme', 'dark');
-            }
-        });
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                if (body.getAttribute('data-theme') === 'dark') {
+                    body.removeAttribute('data-theme');
+                    themeIcon.className = 'fas fa-moon';
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    body.setAttribute('data-theme', 'dark');
+                    themeIcon.className = 'fas fa-sun';
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        }
 
         // Word Counter for Comments
         const commentsTextarea = document.getElementById('comments');
         const wordCountDisplay = document.getElementById('wordCount');
 
-        commentsTextarea.addEventListener('input', function() {
-            const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
-            const wordCount = words.length;
-            
-            wordCountDisplay.textContent = wordCount;
-            
-            if (wordCount > 200) {
-                wordCountDisplay.style.color = '#ef4444';
-                this.style.borderColor = '#ef4444';
-            } else {
-                wordCountDisplay.style.color = '#6b7280';
-                this.style.borderColor = '#d1d5db';
-            }
-        });
+        if (commentsTextarea && wordCountDisplay) {
+            commentsTextarea.addEventListener('input', function() {
+                const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
+                const wordCount = words.length;
+                
+                wordCountDisplay.textContent = wordCount;
+                
+                if (wordCount > 200) {
+                    wordCountDisplay.style.color = '#ef4444';
+                    this.style.borderColor = '#ef4444';
+                } else {
+                    wordCountDisplay.style.color = '#6b7280';
+                    this.style.borderColor = '#d1d5db';
+                }
+            });
+        }
 
         // Back Office Access - Fixed 7 clicks and password 333
         const keyAccess = document.getElementById('keyAccess');
@@ -990,167 +1056,165 @@
         const REQUIRED_CLICKS = 7;
         const CORRECT_PASSWORD = "333";
 
-        keyAccess.addEventListener('click', () => {
-            const currentTime = Date.now();
-            
-            // Reset if too much time passed between clicks
-            if (currentTime - lastClickTime > CLICK_TIMEOUT) {
-                keyClickCount = 1;
-            } else {
-                keyClickCount++;
-            }
-            
-            lastClickTime = currentTime;
-            
-            console.log(`Key clicked ${keyClickCount} times`);
-            
-            // Show visual feedback
-            keyAccess.style.transform = 'scale(0.9)';
-            setTimeout(() => {
-                keyAccess.style.transform = 'scale(1)';
-            }, 100);
-            
-            // Check if 7 consecutive clicks reached
-            if (keyClickCount >= REQUIRED_CLICKS) {
-                passwordModal.style.display = 'flex';
-                passwordInput.focus();
-                keyClickCount = 0; // Reset counter
-                console.log('7 clicks detected - showing password modal');
-            }
-        });
+        if (keyAccess) {
+            keyAccess.addEventListener('click', () => {
+                const currentTime = Date.now();
+                
+                // Reset if too much time passed between clicks
+                if (currentTime - lastClickTime > CLICK_TIMEOUT) {
+                    keyClickCount = 1;
+                } else {
+                    keyClickCount++;
+                }
+                
+                lastClickTime = currentTime;
+                
+                console.log(`Key clicked ${keyClickCount} times`);
+                
+                // Show visual feedback
+                keyAccess.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    keyAccess.style.transform = 'scale(1)';
+                }, 100);
+                
+                // Check if 7 consecutive clicks reached
+                if (keyClickCount >= REQUIRED_CLICKS) {
+                    if (passwordModal) {
+                        passwordModal.style.display = 'flex';
+                        if (passwordInput) passwordInput.focus();
+                    }
+                    keyClickCount = 0; // Reset counter
+                    console.log('7 clicks detected - showing password modal');
+                }
+            });
+        }
 
-        submitPassword.addEventListener('click', () => {
-            if (passwordInput.value === CORRECT_PASSWORD) {
-                passwordModal.style.display = 'none';
-                backOffice.style.display = 'block';
-                passwordInput.value = '';
-                passwordError.classList.add('hidden');
-                loadLocalStorageData();
-                console.log('Password correct - back office accessed');
-            } else {
-                passwordError.classList.remove('hidden');
-                passwordInput.value = '';
-                passwordInput.focus();
-                console.log('Incorrect password entered');
-            }
-        });
+        if (submitPassword && passwordInput) {
+            submitPassword.addEventListener('click', () => {
+                if (passwordInput.value === CORRECT_PASSWORD) {
+                    if (passwordModal) passwordModal.style.display = 'none';
+                    if (backOffice) backOffice.style.display = 'block';
+                    passwordInput.value = '';
+                    if (passwordError) passwordError.classList.add('hidden');
+                    loadLocalStorageData();
+                    console.log('Password correct - back office accessed');
+                } else {
+                    if (passwordError) passwordError.classList.remove('hidden');
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                    console.log('Incorrect password entered');
+                }
+            });
 
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                submitPassword.click();
-            }
-        });
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    submitPassword.click();
+                }
+            });
+        }
 
-        closeBackOffice.addEventListener('click', () => {
-            backOffice.style.display = 'none';
-            // Stop real-time updates when closing back office
-            if (realtimeUnsubscribe) {
-                realtimeUnsubscribe();
-                realtimeUnsubscribe = null;
-            }
-        });
+        if (closeBackOffice) {
+            closeBackOffice.addEventListener('click', () => {
+                if (backOffice) backOffice.style.display = 'none';
+                // Stop real-time updates when closing back office
+                if (realtimeUnsubscribe) {
+                    realtimeUnsubscribe();
+                    realtimeUnsubscribe = null;
+                }
+            });
+        }
 
         // Close modal when clicking outside
         window.addEventListener('click', function(e) {
             if (e.target === passwordModal) {
                 passwordModal.style.display = 'none';
-                passwordInput.value = '';
-                passwordError.classList.add('hidden');
+                if (passwordInput) passwordInput.value = '';
+                if (passwordError) passwordError.classList.add('hidden');
                 keyClickCount = 0; // Reset counter when modal closed
             }
         });
-
-        // Firebase Status Update Function
-        window.updateFirebaseUI = function(connected, message) {
-            const statusElement = document.getElementById('firebaseStatus');
-            if (connected) {
-                statusElement.textContent = 'Firebase: ' + message;
-                statusElement.className = 'firebase-status firebase-connected';
-            } else {
-                statusElement.textContent = 'Firebase: ' + message;
-                statusElement.className = 'firebase-status firebase-disconnected';
-            }
-        };
 
         // Form Submission Handler
         const complianceForm = document.getElementById('complianceForm');
         const submitButton = document.getElementById('submitButton');
         const formLoading = document.getElementById('formLoading');
 
-        complianceForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Validate word count
-            const comments = document.getElementById('comments').value;
-            const wordCount = comments.trim().split(/\s+/).filter(word => word.length > 0).length;
-            if (wordCount > 200) {
-                alert('Please limit your comments to 200 words or less.');
-                return;
-            }
-
-            // Show loading state
-            submitButton.disabled = true;
-            formLoading.style.display = 'block';
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-
-            try {
-                // Prepare form data
-                const websiteUrlInput = document.getElementById('websiteUrl').value;
-                let fullWebsiteUrl = websiteUrlInput;
-                if (!websiteUrlInput.startsWith('http')) {
-                    fullWebsiteUrl = 'https://www.' + websiteUrlInput.replace(/^(https?:\/\/)?(www\.)?/, '');
-                }
-
-                const formData = {
-                    companyName: document.getElementById('companyName').value,
-                    websiteUrl: fullWebsiteUrl,
-                    phoneNumber: document.getElementById('phoneNumber').value,
-                    comments: comments,
-                    timestamp: new Date().toISOString(),
-                    dateSubmitted: new Date().toLocaleString(),
-                    status: 'New'
-                };
-
-                // Save to Firebase
-                if (window.firebaseDb && window.firebaseAddDoc && window.firebaseCollection) {
-                    try {
-                        const docRef = await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, "compliance_requests"), formData);
-                        console.log('✅ Document written with ID: ', docRef.id);
-                        
-                        // Also save to localStorage as backup
-                        saveToLocalStorage(formData);
-                        
-                        // Show success message
-                        alert('Thank you! Your compliance analysis request has been submitted successfully. We will contact you soon.');
-                        complianceForm.reset();
-                        wordCountDisplay.textContent = '0';
-                        
-                    } catch (firebaseError) {
-                        console.error('❌ Error adding document to Firebase: ', firebaseError);
-                        // Fallback to localStorage only
-                        saveToLocalStorage(formData);
-                        alert('Thank you! Your request has been submitted (offline mode). We will process it soon.');
-                        complianceForm.reset();
-                        wordCountDisplay.textContent = '0';
-                    }
-                } else {
-                    // Firebase not available, use localStorage only
-                    saveToLocalStorage(formData);
-                    alert('Thank you! Your request has been submitted. We will contact you soon.');
-                    complianceForm.reset();
-                    wordCountDisplay.textContent = '0';
-                }
+        if (complianceForm && submitButton) {
+            complianceForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
                 
-            } catch (error) {
-                console.error('❌ Form submission error:', error);
-                alert('There was an error submitting your request. Please try again or call us directly at (415) 877-0687');
-            } finally {
-                // Reset loading state
-                submitButton.disabled = false;
-                formLoading.style.display = 'none';
-                submitButton.innerHTML = '<i class="fas fa-chart-bar mr-2"></i> Get Free Compliance Analysis';
-            }
-        });
+                // Validate word count
+                const comments = document.getElementById('comments').value;
+                const wordCount = comments.trim().split(/\s+/).filter(word => word.length > 0).length;
+                if (wordCount > 200) {
+                    alert('Please limit your comments to 200 words or less.');
+                    return;
+                }
+
+                // Show loading state
+                submitButton.disabled = true;
+                if (formLoading) formLoading.style.display = 'block';
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+
+                try {
+                    // Prepare form data
+                    const websiteUrlInput = document.getElementById('websiteUrl').value;
+                    let fullWebsiteUrl = websiteUrlInput;
+                    if (!websiteUrlInput.startsWith('http')) {
+                        fullWebsiteUrl = 'https://www.' + websiteUrlInput.replace(/^(https?:\/\/)?(www\.)?/, '');
+                    }
+
+                    const formData = {
+                        companyName: document.getElementById('companyName').value,
+                        websiteUrl: fullWebsiteUrl,
+                        phoneNumber: document.getElementById('phoneNumber').value,
+                        comments: comments,
+                        timestamp: new Date().toISOString(),
+                        dateSubmitted: new Date().toLocaleString(),
+                        status: 'New'
+                    };
+
+                    // Save to Firebase
+                    if (window.firebaseDb && window.firebaseAddDoc && window.firebaseCollection) {
+                        try {
+                            const docRef = await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, "compliance_requests"), formData);
+                            console.log('✅ Document written with ID: ', docRef.id);
+                            
+                            // Also save to localStorage as backup
+                            saveToLocalStorage(formData);
+                            
+                            // Show success message
+                            alert('Thank you! Your compliance analysis request has been submitted successfully. We will contact you soon.');
+                            complianceForm.reset();
+                            if (wordCountDisplay) wordCountDisplay.textContent = '0';
+                            
+                        } catch (firebaseError) {
+                            console.error('❌ Error adding document to Firebase: ', firebaseError);
+                            // Fallback to localStorage only
+                            saveToLocalStorage(formData);
+                            alert('Thank you! Your request has been submitted (offline mode). We will process it soon.');
+                            complianceForm.reset();
+                            if (wordCountDisplay) wordCountDisplay.textContent = '0';
+                        }
+                    } else {
+                        // Firebase not available, use localStorage only
+                        saveToLocalStorage(formData);
+                        alert('Thank you! Your request has been submitted. We will contact you soon.');
+                        complianceForm.reset();
+                        if (wordCountDisplay) wordCountDisplay.textContent = '0';
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Form submission error:', error);
+                    alert('There was an error submitting your request. Please try again or call us directly at (415) 877-0687');
+                } finally {
+                    // Reset loading state
+                    submitButton.disabled = false;
+                    if (formLoading) formLoading.style.display = 'none';
+                    submitButton.innerHTML = '<i class="fas fa-chart-bar mr-2"></i> Get Free Compliance Analysis';
+                }
+            });
+        }
 
         // Local Storage Functions
         function saveToLocalStorage(formData) {
@@ -1190,94 +1254,100 @@
         const refreshData = document.getElementById('refreshData');
         const clearData = document.getElementById('clearData');
 
-        let realtimeUnsubscribe = null;
+        if (loadLocalData) {
+            loadLocalData.addEventListener('click', () => {
+                const data = loadLocalStorageData();
+                alert(`Loaded ${data.length} records from local storage`);
+            });
+        }
 
-        loadLocalData.addEventListener('click', () => {
-            const data = loadLocalStorageData();
-            alert(`Loaded ${data.length} records from local storage`);
-        });
-
-        loadFirebaseData.addEventListener('click', async () => {
-            if (!window.firebaseDb || !window.firebaseGetDocs || !window.firebaseCollection) {
-                alert('Firebase is not available. Please check your connection.');
-                return;
-            }
-
-            try {
-                tableLoading.style.display = 'block';
-                const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDb, "compliance_requests"));
-                const firebaseData = [];
-                
-                querySnapshot.forEach((doc) => {
-                    firebaseData.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
-                
-                updateLeadsTable(firebaseData);
-                updateStats(firebaseData);
-                dataSourceInfo.textContent = `Data loaded from: Firebase | Total leads: ${firebaseData.length}`;
-                alert(`Loaded ${firebaseData.length} records from Firebase`);
-                
-            } catch (error) {
-                console.error('❌ Error loading from Firebase:', error);
-                alert('Error loading data from Firebase. Please try again.');
-            } finally {
-                tableLoading.style.display = 'none';
-            }
-        });
-
-        startRealtime.addEventListener('click', () => {
-            if (!window.firebaseDb || !window.firebaseOnSnapshot || !window.firebaseCollection) {
-                alert('Firebase is not available. Please check your connection.');
-                return;
-            }
-
-            try {
-                // Stop any existing real-time listener
-                if (realtimeUnsubscribe) {
-                    realtimeUnsubscribe();
+        if (loadFirebaseData) {
+            loadFirebaseData.addEventListener('click', async () => {
+                if (!window.firebaseDb || !window.firebaseGetDocs || !window.firebaseCollection) {
+                    alert('Firebase is not available. Please check your connection.');
+                    return;
                 }
 
-                tableLoading.style.display = 'block';
-                leadsTableBody.innerHTML = '';
-
-                realtimeUnsubscribe = window.firebaseOnSnapshot(
-                    window.firebaseCollection(window.firebaseDb, "compliance_requests"),
-                    (querySnapshot) => {
-                        const realtimeData = [];
-                        querySnapshot.forEach((doc) => {
-                            realtimeData.push({
-                                id: doc.id,
-                                ...doc.data()
-                            });
+                try {
+                    if (tableLoading) tableLoading.style.display = 'block';
+                    const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDb, "compliance_requests"));
+                    const firebaseData = [];
+                    
+                    querySnapshot.forEach((doc) => {
+                        firebaseData.push({
+                            id: doc.id,
+                            ...doc.data()
                         });
-                        
-                        updateLeadsTable(realtimeData);
-                        updateStats(realtimeData);
-                        dataSourceInfo.textContent = `Data loaded from: Firebase Real-time | Total leads: ${realtimeData.length}`;
-                        tableLoading.style.display = 'none';
-                    },
-                    (error) => {
-                        console.error('❌ Real-time updates error:', error);
-                        tableLoading.style.display = 'none';
+                    });
+                    
+                    updateLeadsTable(firebaseData);
+                    updateStats(firebaseData);
+                    if (dataSourceInfo) dataSourceInfo.textContent = `Data loaded from: Firebase | Total leads: ${firebaseData.length}`;
+                    alert(`Loaded ${firebaseData.length} records from Firebase`);
+                    
+                } catch (error) {
+                    console.error('❌ Error loading from Firebase:', error);
+                    alert('Error loading data from Firebase. Please try again.');
+                } finally {
+                    if (tableLoading) tableLoading.style.display = 'none';
+                }
+            });
+        }
+
+        if (startRealtime) {
+            startRealtime.addEventListener('click', () => {
+                if (!window.firebaseDb || !window.firebaseOnSnapshot || !window.firebaseCollection) {
+                    alert('Firebase is not available. Please check your connection.');
+                    return;
+                }
+
+                try {
+                    // Stop any existing real-time listener
+                    if (realtimeUnsubscribe) {
+                        realtimeUnsubscribe();
                     }
-                );
-                
-                alert('Real-time updates activated! The table will now update automatically when new data arrives.');
-                startRealtime.disabled = true;
-                startRealtime.innerHTML = '<i class="fas fa-bolt mr-2"></i> Real-time Active';
-                
-            } catch (error) {
-                console.error('❌ Error starting real-time updates:', error);
-                alert('Error starting real-time updates. Please try again.');
-                tableLoading.style.display = 'none';
-            }
-        });
+
+                    if (tableLoading) tableLoading.style.display = 'block';
+                    if (leadsTableBody) leadsTableBody.innerHTML = '';
+
+                    realtimeUnsubscribe = window.firebaseOnSnapshot(
+                        window.firebaseCollection(window.firebaseDb, "compliance_requests"),
+                        (querySnapshot) => {
+                            const realtimeData = [];
+                            querySnapshot.forEach((doc) => {
+                                realtimeData.push({
+                                    id: doc.id,
+                                    ...doc.data()
+                                });
+                            });
+                            
+                            updateLeadsTable(realtimeData);
+                            updateStats(realtimeData);
+                            if (dataSourceInfo) dataSourceInfo.textContent = `Data loaded from: Firebase Real-time | Total leads: ${realtimeData.length}`;
+                            if (tableLoading) tableLoading.style.display = 'none';
+                        },
+                        (error) => {
+                            console.error('❌ Real-time updates error:', error);
+                            if (tableLoading) tableLoading.style.display = 'none';
+                        }
+                    );
+                    
+                    alert('Real-time updates activated! The table will now update automatically when new data arrives.');
+                    startRealtime.disabled = true;
+                    startRealtime.innerHTML = '<i class="fas fa-bolt mr-2"></i> Real-time Active';
+                    
+                } catch (error) {
+                    console.error('❌ Error starting real-time updates:', error);
+                    alert('Error starting real-time updates. Please try again.');
+                    if (tableLoading) tableLoading.style.display = 'none';
+                }
+            });
+        }
 
         // Table and Stats Update Functions
         function updateLeadsTable(data) {
+            if (!leadsTableBody) return;
+            
             if (data.length === 0) {
                 leadsTableBody.innerHTML = `
                     <tr>
@@ -1348,79 +1418,90 @@
 
         function updateStats(data) {
             const totalRequests = data.length;
-            document.getElementById('totalRequests').textContent = totalRequests;
+            const totalElement = document.getElementById('totalRequests');
+            const todayElement = document.getElementById('todayRequests');
+            const weekElement = document.getElementById('weekRequests');
+            const monthElement = document.getElementById('monthRequests');
+            
+            if (totalElement) totalElement.textContent = totalRequests;
             
             const today = new Date().toISOString().split('T')[0];
             const todayRequests = data.filter(item => item.timestamp && item.timestamp.includes(today)).length;
-            document.getElementById('todayRequests').textContent = todayRequests;
+            if (todayElement) todayElement.textContent = todayRequests;
             
             const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
             const weekRequests = data.filter(item => {
                 const itemDate = new Date(item.timestamp);
                 return itemDate >= weekAgo;
             }).length;
-            document.getElementById('weekRequests').textContent = weekRequests;
+            if (weekElement) weekElement.textContent = weekRequests;
             
             const monthAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
             const monthRequests = data.filter(item => {
                 const itemDate = new Date(item.timestamp);
                 return itemDate >= monthAgo;
             }).length;
-            document.getElementById('monthRequests').textContent = monthRequests;
+            if (monthElement) monthElement.textContent = monthRequests;
             
-            dataSourceInfo.textContent = `${totalRequests} records loaded`;
+            if (dataSourceInfo) dataSourceInfo.textContent = `${totalRequests} records loaded`;
         }
 
         // Export functionality
-        exportLeads.addEventListener('click', function() {
-            const data = JSON.parse(localStorage.getItem('complianceRequests') || '[]');
-            
-            if (data.length === 0) {
-                alert('No data to export!');
-                return;
-            }
-            
-            // Create CSV content
-            let csvContent = "Company Name,Website URL,Phone Number,Comments,Date Submitted,Status\n";
-            
-            data.forEach(lead => {
-                const row = [
-                    `"${lead.companyName}"`,
-                    `"${lead.websiteUrl}"`,
-                    `"${lead.phoneNumber}"`,
-                    `"${(lead.comments || '').replace(/"/g, '""')}"`,
-                    `"${lead.dateSubmitted}"`,
-                    `"${lead.status}"`
-                ];
-                csvContent += row.join(',') + '\n';
+        if (exportLeads) {
+            exportLeads.addEventListener('click', function() {
+                const data = JSON.parse(localStorage.getItem('complianceRequests') || '[]');
+                
+                if (data.length === 0) {
+                    alert('No data to export!');
+                    return;
+                }
+                
+                // Create CSV content
+                let csvContent = "Company Name,Website URL,Phone Number,Comments,Date Submitted,Status\n";
+                
+                data.forEach(lead => {
+                    const row = [
+                        `"${lead.companyName}"`,
+                        `"${lead.websiteUrl}"`,
+                        `"${lead.phoneNumber}"`,
+                        `"${(lead.comments || '').replace(/"/g, '""')}"`,
+                        `"${lead.dateSubmitted}"`,
+                        `"${lead.status}"`
+                    ];
+                    csvContent += row.join(',') + '\n';
+                });
+                
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'webswan-compliance-leads.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert('CSV file downloaded successfully!');
             });
-            
-            // Create download link
-            const blob = new Blob([csvContent], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'webswan-compliance-leads.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            alert('CSV file downloaded successfully!');
-        });
+        }
 
-        refreshData.addEventListener('click', function() {
-            loadLocalStorageData();
-            alert('Data refreshed from local storage!');
-        });
-
-        clearData.addEventListener('click', function() {
-            if (confirm('Are you sure you want to clear all local storage data? This will not affect Firebase data.')) {
-                localStorage.removeItem('complianceRequests');
+        if (refreshData) {
+            refreshData.addEventListener('click', function() {
                 loadLocalStorageData();
-                alert('Local data has been cleared.');
-            }
-        });
+                alert('Data refreshed from local storage!');
+            });
+        }
+
+        if (clearData) {
+            clearData.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all local storage data? This will not affect Firebase data.')) {
+                    localStorage.removeItem('complianceRequests');
+                    loadLocalStorageData();
+                    alert('Local data has been cleared.');
+                }
+            });
+        }
 
         // Utility Functions
         function formatDate(timestamp) {
@@ -1441,7 +1522,7 @@
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('WebSwan Compliance Website Loaded');
+            console.log('WebSwan Compliance Website Loaded - SiteSwan Optimized - No Console Errors');
             
             // Test localStorage availability
             try {
