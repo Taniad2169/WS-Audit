@@ -929,7 +929,7 @@
 
         // 🔥 YOUR ACTUAL FIREBASE CONFIG
         const firebaseConfig = {
-           
+            apiKey: "AIzaSyBWPjkbwP0aOOlTh7RFoUDsUU-YTEYW6nw",
             authDomain: "the-webswan-compliance-audit.firebaseapp.com",
             projectId: "the-webswan-compliance-audit",
             storageBucket: "the-webswan-compliance-audit.firebasestorage.app",
@@ -1144,7 +1144,7 @@
             }
         });
 
-        // Form Submission Handler
+        // Form Submission Handler - UPDATED WITH API SUBMISSION
         const complianceForm = document.getElementById('complianceForm');
         const submitButton = document.getElementById('submitButton');
         const formLoading = document.getElementById('formLoading');
@@ -1184,35 +1184,55 @@
                         status: 'New'
                     };
 
-                    // Save to Firebase
-                    if (window.firebaseDb && window.firebaseAddDoc && window.firebaseCollection) {
-                        try {
-                            const docRef = await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, "compliance_requests"), formData);
-                            console.log('✅ Document written with ID: ', docRef.id);
+                    // 🆕 NEW: Submit to your API endpoint
+                    try {
+                        const response = await fetch('/api/submit', {
+                            method: 'POST',
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(formData)
+                        });
+
+                        if (response.ok) {
+                            const result = await response.json();
+                            console.log('✅ API submission successful:', result);
                             
-                            // Also save to localStorage as backup
-                            saveToLocalStorage(formData);
-                            
-                            // Show success message
-                            alert('Thank you! Your compliance analysis request has been submitted successfully. We will contact you soon.');
-                            complianceForm.reset();
-                            if (wordCountDisplay) wordCountDisplay.textContent = '0';
-                            
-                        } catch (firebaseError) {
-                            console.error('❌ Error adding document to Firebase: ', firebaseError);
-                            // Fallback to localStorage only
-                            saveToLocalStorage(formData);
-                            alert('Thank you! Your request has been submitted (offline mode). We will process it soon.');
-                            complianceForm.reset();
-                            if (wordCountDisplay) wordCountDisplay.textContent = '0';
+                            // Show success message from API
+                            if (result.message) {
+                                alert(result.message);
+                            } else {
+                                alert('Thank you! Your compliance analysis request has been submitted successfully. We will contact you soon.');
+                            }
+                        } else {
+                            throw new Error(`API responded with status: ${response.status}`);
                         }
-                    } else {
-                        // Firebase not available, use localStorage only
-                        saveToLocalStorage(formData);
-                        alert('Thank you! Your request has been submitted. We will contact you soon.');
-                        complianceForm.reset();
-                        if (wordCountDisplay) wordCountDisplay.textContent = '0';
+                    } catch (apiError) {
+                        console.warn('⚠️ API submission failed, falling back to Firebase:', apiError);
+                        
+                        // Fallback to Firebase if API fails
+                        if (window.firebaseDb && window.firebaseAddDoc && window.firebaseCollection) {
+                            try {
+                                const docRef = await window.firebaseAddDoc(window.firebaseCollection(window.firebaseDb, "compliance_requests"), formData);
+                                console.log('✅ Document written to Firebase with ID: ', docRef.id);
+                                alert('Thank you! Your compliance analysis request has been submitted successfully. We will contact you soon.');
+                            } catch (firebaseError) {
+                                console.error('❌ Firebase submission failed:', firebaseError);
+                                // Final fallback to localStorage
+                                saveToLocalStorage(formData);
+                                alert('Thank you! Your request has been submitted (offline mode). We will process it soon.');
+                            }
+                        } else {
+                            // Firebase not available, use localStorage only
+                            saveToLocalStorage(formData);
+                            alert('Thank you! Your request has been submitted. We will contact you soon.');
+                        }
                     }
+                    
+                    // Reset form after successful submission
+                    complianceForm.reset();
+                    if (wordCountDisplay) wordCountDisplay.textContent = '0';
                     
                 } catch (error) {
                     console.error('❌ Form submission error:', error);
